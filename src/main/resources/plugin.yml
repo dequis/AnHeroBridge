@@ -1,0 +1,6 @@
+name: AnHeroBridge
+main: org.dequis.anherobridge.AnHeroBridge
+version: '${project.version}'
+author: dx
+website: http://dequis.org/
+depend: [Herochat, CraftIRC]

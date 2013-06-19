@@ -1,0 +1,15 @@
+# Hi there.
+# This is a default config that won't work out of the box.
+#
+# Additionally you need to do most of the bridging on the craftirc side.
+# So, go read the docs.
+#
+# Any issues, join #craftirc on irc.esper.net
+
+AnHeroBridge:
+    bridges:
+        # # Uncomment the following line to add a craftirc tag called
+        # # "bridge-global". This seems to be enough for most people
+        #bridge-global: Global
+        # # Add any extra craftirc tags and herochat channels like this:
+        #craftirc-tag: herochat-channel
