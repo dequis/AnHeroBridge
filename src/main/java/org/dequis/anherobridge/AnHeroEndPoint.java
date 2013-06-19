@@ -24,7 +24,7 @@ public class AnHeroEndPoint implements EndPoint {
         this.herotag = herotag;
         this.irctag = irctag;
 
-		this.herochatChannel = Herochat.getChannelManager().getChannel(herotag);
+        this.herochatChannel = Herochat.getChannelManager().getChannel(herotag);
     }
 
     public void register() {
