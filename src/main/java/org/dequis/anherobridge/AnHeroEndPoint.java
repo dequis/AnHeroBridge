@@ -1,11 +1,13 @@
 package org.dequis.anherobridge;
 
 import java.util.List;
+import java.util.LinkedList;
 
 import org.bukkit.plugin.Plugin;
 
-import com.dthielke.herochat.Herochat;
 import com.dthielke.herochat.Channel;
+import com.dthielke.herochat.Chatter;
+import com.dthielke.herochat.Herochat;
 
 import com.ensifera.animosity.craftirc.CraftIRC;
 import com.ensifera.animosity.craftirc.EndPoint;
@@ -16,22 +18,32 @@ public class AnHeroEndPoint implements EndPoint {
     private CraftIRC craftirc;
     public String herotag;
     public String irctag;
+    private List<String> playerCommandAliases;
 
     private Channel herochatChannel;
 
-    public AnHeroEndPoint(CraftIRC craftirc, String herotag, String irctag) {
+    public AnHeroEndPoint(CraftIRC craftirc, String herotag, String irctag, List<String> playerCommandAliases) {
         this.craftirc = craftirc;
         this.herotag = herotag;
         this.irctag = irctag;
+        this.playerCommandAliases = playerCommandAliases;
 
         this.herochatChannel = Herochat.getChannelManager().getChannel(herotag);
     }
 
     public boolean register() {
-        return this.craftirc.registerEndPoint(this.irctag, this);
+        boolean success = this.craftirc.registerEndPoint(this.irctag, this);
+        for (final String cmd : this.playerCommandAliases) {
+            // if the user specifies names for our players command, they get priority
+            // so unregister the built-in ones (it returns false silently on failure)
+            this.craftirc.unregisterCommand(cmd);
+        }
+        return success;
     }
 
     public boolean unregister() {
+        // TODO: should i reregister removed craftirc commands?
+        // This function should never get called except before a reload
         return this.craftirc.unregisterEndPoint(this.irctag);
     }
 
@@ -42,7 +54,21 @@ public class AnHeroEndPoint implements EndPoint {
 
     @Override
     public void messageIn(RelayedMessage msg) {
-        // msg.getEvent() == "action", herochatChannel.emote?
+        // CraftIRC3 sucks at command extensibility by design
+        // Let's handle stuff our own way here
+        final String cmdPrefix = this.craftirc.cCommandPrefix(0); // can't even get the bot id
+        final String rawMessage = msg.getField("message");
+
+        if (msg.getEvent() == "chat" && rawMessage.startsWith(cmdPrefix)) {
+            int firstSpace = rawMessage.contains(" ") ? rawMessage.indexOf(" ") : rawMessage.length();
+            final String commandName = rawMessage.substring(cmdPrefix.length(), firstSpace);
+            if (playerCommandAliases.contains(commandName)) {
+                this.sendPlayersResponse(msg.getField("source"));
+                return;
+            }
+        }
+
+        // Everything else
         this.herochatChannel.announce(msg.getMessage(this));
     }
 
@@ -58,11 +84,36 @@ public class AnHeroEndPoint implements EndPoint {
 
     @Override
     public List<String> listUsers() {
-        return null;
+        final LinkedList<String> users = new LinkedList<String>();
+        for (Chatter c : this.herochatChannel.getMembers()) {
+            users.add(c.getName());
+        }
+        return users;
     }
 
     @Override
     public List<String> listDisplayUsers() {
-        return null;
+        return this.listUsers();
+    }
+
+    private void sendPlayersResponse(String source) {
+        final List<String> users = this.listUsers();
+        final int playerCount = users.size();
+        String result;
+        if (playerCount > 0) {
+            final StringBuilder builder = new StringBuilder();
+            builder.append(String.format("Players in channel %s (%d): ", this.herotag, playerCount));
+            for (String user : users) {
+                builder.append(user).append(" ");
+            }
+            builder.setLength(builder.length() - 1);
+            result = builder.toString();
+        } else {
+            result = "Nobody is in " + this.herotag + " right now.";
+        }
+
+        final RelayedMessage response = this.craftirc.newMsgToTag(this, source, "");
+        response.setField("message", result);
+        response.post();
     }
 }

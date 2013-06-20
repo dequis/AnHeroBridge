@@ -13,3 +13,8 @@ AnHeroBridge:
         #bridge-global: Global
         # # Add any extra craftirc tags and herochat channels like this:
         #craftirc-tag: herochat-channel
+
+    settings:
+        # Specify names/aliases for the AnHeroBridge players irc command here
+        # These will replace the CraftIRC ones if the names overlap
+        players-irc-commands: ['players']

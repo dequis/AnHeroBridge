@@ -2,6 +2,7 @@ package org.dequis.anherobridge;
 
 import java.util.Random;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -25,6 +26,7 @@ import com.dthielke.herochat.Channel;
 public class AnHeroBridge extends JavaPlugin implements Listener {
 
     private static final String BRIDGES_NODE = "AnHeroBridge.bridges";
+    private static final String SETTINGS_NODE = "AnHeroBridge.settings";
     private static final String UIRCBRIDGE_MESSAGE = "You have uIRCBridge. I don't know why you would want to use both at the same time.";
     private static final String BRIDGES_MESSAGE = "You didn't define any bridges.";
     private static final String INVALID_BRIDGES_MESSAGE = "None of the bridges you defined were valid.";
@@ -65,7 +67,8 @@ public class AnHeroBridge extends JavaPlugin implements Listener {
 
             for (String irctag : this.getConfig().getConfigurationSection(BRIDGES_NODE).getKeys(false)) {
                 String herotag = this.getConfig().getString(BRIDGES_NODE + "." + irctag);
-                AnHeroEndPoint endpoint = new AnHeroEndPoint(this.craftirc, herotag, irctag);
+                List<String> playerCommandAliases = (List<String>) this.getConfig().getList(SETTINGS_NODE + ".players-irc-commands");
+                AnHeroEndPoint endpoint = new AnHeroEndPoint(this.craftirc, herotag, irctag, playerCommandAliases);
                 if (!endpoint.register()) {
                     this.getLogger().warning("Couldn't register craftirc tag " + irctag + " for herochat channel " + herotag);
                     shitHappened = true;
