@@ -164,7 +164,7 @@ public class AnHeroBridge extends JavaPlugin implements Listener {
             super((prefix != null ? (prefix + " ") : "") + messages[random.nextInt(messages.length)]);
         }
         public DerpException() {
-            super((String) null);
+            this((String) null);
         }
     }
 }
