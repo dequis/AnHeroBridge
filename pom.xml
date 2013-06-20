@@ -6,7 +6,7 @@
     <packaging>jar</packaging>
     <version>0.5</version>
     <name>AnHeroBridge</name>
-    <url>http://github.com/dequis/</url>
+    <url>http://github.com/dequis/AnHeroBridge/</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>com.ensifera</groupId>
             <artifactId>CraftIRC</artifactId>
-            <version>3.9.4</version>
+            <version>3.9.5</version>
             <type>jar</type>
         </dependency>
         <dependency>
