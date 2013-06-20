@@ -17,4 +17,7 @@ AnHeroBridge:
     settings:
         # Specify names/aliases for the AnHeroBridge players irc command here
         # These will replace the CraftIRC ones if the names overlap
-        players-irc-commands: ['players']
+        # Example:
+        # players-irc-commands: ['players']
+        # The default behavior is to not add any command:
+        players-irc-commands: []
