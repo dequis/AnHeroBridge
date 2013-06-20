@@ -27,11 +27,15 @@ public class AnHeroBridge extends JavaPlugin implements Listener {
     private static final String BRIDGES_NODE = "AnHeroBridge.bridges";
     private static final String UIRCBRIDGE_MESSAGE = "You have uIRCBridge. I don't know why you would want to use both at the same time.";
     private static final String BRIDGES_MESSAGE = "You didn't define any bridges.";
+    private static final String INVALID_BRIDGES_MESSAGE = "None of the bridges you defined were valid.";
     private static final String AUTOPATHS_MESSAGE = "You have autopaths enabled in the craftirc config.\n" +
         "Why would you do this? Have you not read the docs that tells you to disable it?\n";
 
+    // irc tag to endpoint
     private final HashMap<String, AnHeroEndPoint> bridges = new HashMap();
+    // herochat tag to irc tag (this reverse mapping looks asymmetrical...)
     private final HashMap<String, String> heroTagMap = new HashMap();
+
     private CraftIRC craftirc;
 
     // still need to listen for plugin enable events
@@ -57,20 +61,26 @@ public class AnHeroBridge extends JavaPlugin implements Listener {
                 throw new DerpException(BRIDGES_MESSAGE);
             }
 
+            boolean shitHappened = false;
+
             for (String irctag : this.getConfig().getConfigurationSection(BRIDGES_NODE).getKeys(false)) {
                 String herotag = this.getConfig().getString(BRIDGES_NODE + "." + irctag);
                 AnHeroEndPoint endpoint = new AnHeroEndPoint(this.craftirc, herotag, irctag);
-                endpoint.register();
-                this.bridges.put(irctag, endpoint);
-                this.heroTagMap.put(herotag, irctag);
+                if (!endpoint.register()) {
+                    this.getLogger().warning("Couldn't register craftirc tag " + irctag + " for herochat channel " + herotag);
+                    shitHappened = true;
+                } else {
+                    this.bridges.put(irctag, endpoint);
+                    this.heroTagMap.put(herotag, irctag);
+                }
             }
 
             if (this.bridges.isEmpty()) {
-                // Like the previous one, but if the node exists as a list, empty.
-                throw new DerpException(BRIDGES_MESSAGE);
+                throw new DerpException(shitHappened ? INVALID_BRIDGES_MESSAGE : BRIDGES_MESSAGE);
             }
 
             this.kindaDisabled = false;
+            this.getLogger().info("Registered tags for: " + this.heroTagMap.toString());
             this.getLogger().info("Enabled");
 
         } catch (DerpException e) {

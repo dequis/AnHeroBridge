@@ -27,12 +27,12 @@ public class AnHeroEndPoint implements EndPoint {
         this.herochatChannel = Herochat.getChannelManager().getChannel(herotag);
     }
 
-    public void register() {
-        this.craftirc.registerEndPoint(this.irctag, this);
+    public boolean register() {
+        return this.craftirc.registerEndPoint(this.irctag, this);
     }
 
-    public void unregister() {
-        this.craftirc.unregisterEndPoint(this.irctag);
+    public boolean unregister() {
+        return this.craftirc.unregisterEndPoint(this.irctag);
     }
 
     @Override
