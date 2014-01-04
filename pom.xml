@@ -14,19 +14,19 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.5.2-R1.0</version>
+            <version>1.6.4-R2.0</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>com.ensifera</groupId>
             <artifactId>CraftIRC</artifactId>
-            <version>3.9.5</version>
+            <version>3.9.6</version>
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>com.dthielke</groupId>
-            <artifactId>herochat</artifactId>
-            <version>5.6.6</version>
+            <groupId>com.dthielke.herochat</groupId>
+            <artifactId>HeroChat</artifactId>
+            <version>5.6.5-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
     </dependencies>
@@ -59,8 +59,8 @@
             <url>http://repo.kitteh.org/content/groups/public</url>
         </repository>
         <repository>
-            <id>herocraft-has-no-repo</id>
-            <url>file://${basedir}/deps-repo</url>
+            <id>herocraft</id>
+            <url>http://nexus.theyeticave.net/content/repositories/pub_snapshots</url>
         </repository>
     </repositories>
 </project>
