@@ -34,9 +34,9 @@ public class AnHeroBridge extends JavaPlugin implements Listener {
         "Why would you do this? Have you not read the docs that tells you to disable it?\n";
 
     // irc tag to endpoint
-    private final HashMap<String, AnHeroEndPoint> bridges = new HashMap();
+    private final HashMap<String, AnHeroEndPoint> bridges = new HashMap<String, AnHeroEndPoint>();
     // herochat tag to irc tag (this reverse mapping looks asymmetrical...)
-    private final HashMap<String, String> heroTagMap = new HashMap();
+    private final HashMap<String, String> heroTagMap = new HashMap<String, String>();
 
     private CraftIRC craftirc;
 
@@ -67,7 +67,7 @@ public class AnHeroBridge extends JavaPlugin implements Listener {
 
             for (String irctag : this.getConfig().getConfigurationSection(BRIDGES_NODE).getKeys(false)) {
                 String herotag = this.getConfig().getString(BRIDGES_NODE + "." + irctag);
-                List<String> playerCommandAliases = (List<String>) this.getConfig().getList(SETTINGS_NODE + ".players-irc-commands");
+                List<String> playerCommandAliases = this.getConfig().getStringList(SETTINGS_NODE + ".players-irc-commands");
                 AnHeroEndPoint endpoint = new AnHeroEndPoint(this.craftirc, herotag, irctag, playerCommandAliases);
                 if (!endpoint.register()) {
                     this.getLogger().warning("Couldn't register craftirc tag " + irctag + " for herochat channel " + herotag);
@@ -153,6 +153,7 @@ public class AnHeroBridge extends JavaPlugin implements Listener {
     }
 
     // Handle cases of user derp.
+    @SuppressWarnings("serial")
     private static class DerpException extends Exception {
         static final String[] messages = {
             "I'm getting out of here. Have fun.",
