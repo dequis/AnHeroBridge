@@ -4,7 +4,7 @@
     <groupId>org.dequis</groupId>
     <artifactId>AnHeroBridge</artifactId>
     <packaging>jar</packaging>
-    <version>0.5</version>
+    <version>0.7</version>
     <name>AnHeroBridge</name>
     <url>http://github.com/dequis/AnHeroBridge/</url>
     <properties>
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>com.ensifera</groupId>
             <artifactId>CraftIRC</artifactId>
-            <version>3.9.6</version>
+            <version>3.9.8</version>
             <type>jar</type>
         </dependency>
         <dependency>
