@@ -5,9 +5,10 @@ import java.util.LinkedList;
 
 import org.bukkit.plugin.Plugin;
 
-import com.dthielke.herochat.Channel;
-import com.dthielke.herochat.Chatter;
-import com.dthielke.herochat.Herochat;
+import com.dthielke.api.Channel;
+import com.dthielke.api.Chatter;
+import com.dthielke.ChatterManager;
+import com.dthielke.Herochat;
 
 import com.ensifera.animosity.craftirc.CraftIRC;
 import com.ensifera.animosity.craftirc.EndPoint;
@@ -21,6 +22,7 @@ public class AnHeroEndPoint implements EndPoint {
     private List<String> playerCommandAliases;
 
     private Channel herochatChannel;
+    private ChatterManager chatterManager;
 
     public AnHeroEndPoint(CraftIRC craftirc, String herotag, String irctag, List<String> playerCommandAliases) {
         this.craftirc = craftirc;
@@ -29,6 +31,7 @@ public class AnHeroEndPoint implements EndPoint {
         this.playerCommandAliases = playerCommandAliases;
 
         this.herochatChannel = Herochat.getChannelManager().getChannel(herotag);
+        this.chatterManager = Herochat.getChatterManager();
     }
 
     public boolean register() {
@@ -85,8 +88,10 @@ public class AnHeroEndPoint implements EndPoint {
     @Override
     public List<String> listUsers() {
         final LinkedList<String> users = new LinkedList<String>();
-        for (Chatter c : this.herochatChannel.getMembers()) {
-            users.add(c.getName());
+        for (Chatter c : this.chatterManager.getChatters()) {
+            if (c.hasChannel(this.herochatChannel)) {
+                users.add(c.getName());
+            }
         }
         return users;
     }

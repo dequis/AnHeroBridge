@@ -18,10 +18,10 @@ import com.ensifera.animosity.craftirc.CraftIRC;
 import com.ensifera.animosity.craftirc.EndPoint;
 import com.ensifera.animosity.craftirc.RelayedMessage;
 
-import com.dthielke.herochat.ChannelChatEvent;
-import com.dthielke.herochat.Chatter;
-import com.dthielke.herochat.Chatter.Result;
-import com.dthielke.herochat.Channel;
+import com.dthielke.api.event.ChannelChatEvent;
+import com.dthielke.api.Chatter;
+import com.dthielke.api.ChatResult;
+import com.dthielke.api.Channel;
 
 public class AnHeroBridge extends JavaPlugin implements Listener {
 
@@ -124,7 +124,7 @@ public class AnHeroBridge extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onHeroChannelChat(ChannelChatEvent e) {
-        if (this.kindaDisabled || e.getResult() != Result.ALLOWED) {
+        if (this.kindaDisabled || e.getResult() != ChatResult.ALLOWED) {
             return;
         }
 
@@ -139,7 +139,7 @@ public class AnHeroBridge extends JavaPlugin implements Listener {
             return;
         }
         
-        Player player = e.getSender().getPlayer();
+        Player player = e.getChatter().getPlayer();
         msg.setField("sender", player.getDisplayName());
         msg.setField("message", e.getMessage());
         msg.setField("world", player.getWorld().getName());
